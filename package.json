@@ -17,7 +17,6 @@
     "immer": "^8.0.0",
     "moment": "2.24.0",
     "node-gyp": "^9.1.0",
-    "node-sass": "4.13.1",
     "nouislider": "14.1.1",
     "qs": "^6.9.4",
     "react": "^16.3.0",
@@ -48,6 +47,7 @@
     "gulp-append-prepend": "1.0.8",
     "jquery": "^3.5.1",
     "react-error-overlay": "^6.0.9",
+    "sass": "^1.54.9",
     "typescript": "3.7.5"
   },
   "scripts": {
