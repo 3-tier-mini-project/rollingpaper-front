@@ -2,7 +2,7 @@ const noteListDiv = document.querySelector(".note-list");
 
 // let noteID = 1;
 
-function Note(nickname, password, content){
+function Note(nickname, password, content) {
   this.nickname = nickname;
   this.password = password;
   this.content = content;
@@ -10,10 +10,10 @@ function Note(nickname, password, content){
 
 // Add eventListeners 
 // 저장된 페이퍼 로딩, 버튼 클릭에 대한 이벤트리스너 추가
-function eventListeners(){
+function eventListeners() {
   document.addEventListener("DOMContentLoaded", displayNotes);
-  document.getElementById("add-note-btn").addEventListener("click", addNewNote); 
-  
+  document.getElementById("add-note-btn").addEventListener("click", addNewNote);
+
   noteListDiv.addEventListener("click", deleteNote);
 }
 
@@ -22,7 +22,7 @@ eventListeners();
 
 // get item from storage 
 // 저장된 페이퍼들을 불러오는 함수
-function getDataFromStorage(){
+function getDataFromStorage() {
   return localStorage.getItem("notes") ? JSON.parse(localStorage.getItem("notes")) : [];
 }
 
@@ -30,51 +30,60 @@ function getDataFromStorage(){
 
 // add a new note in the list 
 
-function addNewNote(){
+function addNewNote() {
   const nickname = document.getElementById("nickname");
   const password = document.getElementById("password");
   const content = document.getElementById("content");
-  
-  if(validateInput(nickname, password, content)){
+
+  if (validateInput(nickname, password, content)) {
     let notes = getDataFromStorage();
-    
+
     let noteItem = new Note(nickname.value, password.value, content.value);
     notes.push(noteItem);
     createNote(noteItem);
-    
+
+    console.log(nickname.value, password.value, content.value);
+
+    axios.post('http://192.168.56.103:8080/', {
+      nickname: nickname.value,
+      password: password.value,
+      content: content.value
+    }).then((res) => {
+      console.log(res);
+    })
     // saving in the local storage 
-    
+
     localStorage.setItem("notes", JSON.stringify(notes));
     nickname.value = "";
     password.value = "";
     content.value = "";
-    
+
   }
 }
 
 
 //  input validation 
 
-function validateInput(nickname, password, content){
-  if(nickname.value !== "" && password.value !== "" && content.value !== "") {
+function validateInput(nickname, password, content) {
+  if (nickname.value !== "" && password.value !== "" && content.value !== "") {
     return true;
   } else {
-    if(nickname.value === "") nickname.classList.add("warning");
-    if(password.value === "") password.classList.add("warning");
-    if(content.value === "") content.classList.add("warning");
+    if (nickname.value === "") nickname.classList.add("warning");
+    if (password.value === "") password.classList.add("warning");
+    if (content.value === "") content.classList.add("warning");
   }
   setTimeout(() => {
     nickname.classList.remove("warning");
     password.classList.remove("warning");
     content.classList.remove("warning");
-    
+
   }, 1600);
 }
 
 
 // create a new note div
 
-function createNote(noteItem){
+function createNote(noteItem) {
   const div = document.createElement("div");
   div.classList.add("note-item");
   div.innerHTML = `
@@ -91,12 +100,12 @@ function createNote(noteItem){
 
 // display all the notes from the local storage
 
-function displayNotes(){
+function displayNotes() {
   let notes = getDataFromStorage();
-  if(notes.length > 0) {
+  if (notes.length > 0) {
     noteID = notes[notes.length - 1].id;
     noteID++;
-  }else {
+  } else {
     noteID = 1;
   }
   notes.forEach(item => {
@@ -106,9 +115,9 @@ function displayNotes(){
 
 
 // delete a note 
-function deleteNote(e){
+function deleteNote(e) {
   if (e.target.classList.contains("delete-note-btn")) {
-    
+
     e.target.parentElement.remove();
     let divID = e.target.parentElement.dataset.id;
     let notes = getDataFromStorage();
@@ -121,10 +130,10 @@ function deleteNote(e){
 
 
 // delete all notes 
-function deleteAllNotes(){
+function deleteAllNotes() {
   localStorage.removeItem("notes");
   let noteList = document.querySelectorAll(".note-item");
-  if(noteList.length > 0){
+  if (noteList.length > 0) {
     noteList.forEach(item => {
       noteListDiv.removeChild(item);
     });
