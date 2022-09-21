@@ -43,14 +43,15 @@ function addNewNote() {
     createNote(noteItem);
 
     console.log(nickname.value, password.value, content.value);
-
-    axios.post('http://192.168.56.103:8080/', {
+    const dest = 'http://' + window.location.hostname + ':8080';
+    console.log(dest);
+    axios.post(dest, {
       nickname: nickname.value,
       password: password.value,
       content: content.value
     }).then((res) => {
       console.log(res);
-    })
+    });
     // saving in the local storage 
 
     localStorage.setItem("notes", JSON.stringify(notes));
@@ -101,16 +102,16 @@ function createNote(noteItem) {
 // display all the notes from the local storage
 
 function displayNotes() {
-  let notes = getDataFromStorage();
-  if (notes.length > 0) {
-    noteID = notes[notes.length - 1].id;
-    noteID++;
-  } else {
-    noteID = 1;
-  }
-  notes.forEach(item => {
-    createNote(item);
-  });
+  const dest = 'http://' + window.location.hostname + ':8080';
+
+  console.log(dest);
+  axios.get(dest).then((res) => {
+    console.log(res);
+    let notes = res.data;
+    notes.forEach(item => {
+      createNote(item);
+    });
+  })
 }
 
 
@@ -125,6 +126,18 @@ function deleteNote(e) {
       return item.id !== parseInt(divID);
     });
     localStorage.setItem("notes", JSON.stringify(newNotesList));
+
+    /*
+    const dest = 'http://' + window.location.hostname + ':8080';
+    axios.delete(dest, {
+      data: {
+        id: id.value,
+        password: password.value
+      }
+    }).then((res) => {
+      console.log(res); 
+    })
+    */
   }
 }
 
