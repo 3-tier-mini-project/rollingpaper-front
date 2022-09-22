@@ -42,12 +42,6 @@ function addNewNote() {
   const content = document.getElementById("content");
 
   if (validateInput(nickname, password, content)) {
-    // let notes = getDataFromStorage();
-
-    // let noteItem = new Note(nickname.value, password.value, content.value);
-    // notes.push(noteItem);
-    // createNote(noteItem);
-
     console.log(nickname.value, password.value, content.value);
     console.log(dest);
     axios.post(dest, {
@@ -58,26 +52,33 @@ function addNewNote() {
       console.log(res);
       window.location.reload();
     });
-    // saving in the local storage 
 
-    // localStorage.setItem("notes", JSON.stringify(notes));
+
+    // saving in the local storage 
     nickname.value = "";
     password.value = "";
     content.value = "";
-
   }
 }
 
 
 //  input validation 
-
 function validateInput(nickname, password, content) {
   if (nickname.value !== "" && password.value !== "" && content.value !== "") {
     return true;
   } else {
-    if (nickname.value === "") nickname.classList.add("warning");
-    if (password.value === "") password.classList.add("warning");
-    if (content.value === "") content.classList.add("warning");
+    if (nickname.value === "") {
+      nickname.classList.add("warning");
+      nickname.placeholder = "입력해 주세요.";
+    }
+    if (password.value === "") {
+      password.classList.add("warning");
+      password.placeholder = "입력해 주세요.";
+    }
+    if (content.value === "") {
+      content.classList.add("warning");
+      content.placeholder = "입력해 주세요.";
+    }
   }
   setTimeout(() => {
     nickname.classList.remove("warning");
@@ -89,7 +90,6 @@ function validateInput(nickname, password, content) {
 
 
 // create a new note div
-
 function createNote(noteItem) {
   const div = document.createElement("div");
   div.classList.add("note-item");
@@ -105,9 +105,7 @@ function createNote(noteItem) {
   noteListDiv.appendChild(div);
 }
 
-
 // display all the notes from the local storage
-
 function displayNotes() {
 
   console.log(dest);
@@ -120,8 +118,7 @@ function displayNotes() {
   });
 }
 
-
-// delete a note
+// btn click functions
 function clickBtn(e) {
 
   // 삭제 버튼 클릭
@@ -140,25 +137,37 @@ function clickBtn(e) {
       const div = document.createElement("div");
       div.classList.add("modal");
       div.innerHTML = `
-          <div>비밀번호를 입력하세요.</div>
-          <input type="text" id="corrpw" name="corrpw" />
-          <button type="submit" class="input-pw-btn">확인</button>
-          <button type="button" class="delete-note-btn clicked">취소</button>
+        <div>비밀번호를 입력하세요.</div>
+        <div class="err-msg">　</div>
+        <input type="text" class="corrpw" name="corrpw" />
+        <button type="submit" class="input-pw-btn">확인</button>
+        <button type="button" class="delete-note-btn clicked">취소</button>
       `;
       note_item.appendChild(div);
       delete_btn.classList.add("clicked");
-      if (result == true) {
-        successDelete(e);
-      }
     }
   }
 
   else if (e.target.classList.contains("input-pw-btn")) {
     const pw_input = e.target.previousElementSibling.value;
-    console.log(pw_input);
     const note_id = e.target.closest(".note-item").id;
-    console.log(note_id);
-    successDelete(note_id, pw_input);
+    axios.delete(dest, {
+      data: {
+        id: note_id,
+        password: pw_input
+      }
+    }).then((res) => {
+      // 200
+      console.log(res);
+      displayNotes();
+      
+      // 401 
+      // console.log(res);
+      // e.target.previousElementSibling.previousElementSibling.innerText = "비밀번호가 틀렸습니다.";
+
+      // 406
+      // displayNotes();
+    })
   }
 }
 
@@ -179,41 +188,41 @@ function deleteModal(delete_btn) {
   }
 }
 
-function successDelete(note_id, pw_input) {
-  axios.delete(dest, {
-    data: {
-      id: note_id,
-      password: pw_input
-    }
-  }).then((res) => {
-    console.log(res);
-    window.location.reload();
-  })
-}
+// function successDelete(note_id, pw_input) {
+//   axios.delete(dest, {
+//     data: {
+//       id: note_id,
+//       password: pw_input
+//     }
+//   }).then((res) => {
+//     console.log(res);
+//     window.location.reload();
+//   })
+// }
 
 
-// delete a note 
-function deleteNote(e) {
-  if (e.target.classList.contains("delete-note-btn")) {
+// // delete a note 
+// function deleteNote(e) {
+//   if (e.target.classList.contains("delete-note-btn")) {
 
-    e.target.parentElement.remove();
-    let divID = e.target.parentElement.dataset.id;
-    let notes = getDataFromStorage();
-    let newNotesList = notes.filter(item => {
-      return item.id !== parseInt(divID);
-    });
-    localStorage.setItem("notes", JSON.stringify(newNotesList));
+//     e.target.parentElement.remove();
+//     let divID = e.target.parentElement.dataset.id;
+//     let notes = getDataFromStorage();
+//     let newNotesList = notes.filter(item => {
+//       return item.id !== parseInt(divID);
+//     });
+//     localStorage.setItem("notes", JSON.stringify(newNotesList));
 
-    /*
-    const dest = 'http://' + window.location.hostname + ':8080';
-    axios.delete(dest, {
-      data: {
-        id: id.value,
-        password: password.value
-      }
-    }).then((res) => {
-      console.log(res); 
-    })
-    */
-  }
-}
+//     /*
+//     const dest = 'http://' + window.location.hostname + ':8080';
+//     axios.delete(dest, {
+//       data: {
+//         id: id.value,
+//         password: password.value
+//       }
+//     }).then((res) => {
+//       console.log(res); 
+//     })
+//     */
+//   }
+// }
