@@ -107,7 +107,6 @@ function createNote(noteItem) {
 
 // display all the notes from the local storage
 function displayNotes() {
-
   console.log(dest);
   axios.get(dest).then((res) => {
     console.log(res);
@@ -159,14 +158,14 @@ function clickBtn(e) {
     }).then((res) => {
       // 200
       console.log(res);
-      displayNotes();
+      window.location.reload();
       
       // 401 
       // console.log(res);
       // e.target.previousElementSibling.previousElementSibling.innerText = "비밀번호가 틀렸습니다.";
 
       // 406
-      // displayNotes();
+      // window.location.reload();
     })
   }
 }
