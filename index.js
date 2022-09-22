@@ -1,4 +1,4 @@
-windows.onLoad = function() {
+window.onLoad = function () {
   displayNotes();
 }
 
@@ -123,15 +123,15 @@ function displayNotes() {
 
 // delete a note
 function clickBtn(e) {
- 
+
   // 삭제 버튼 클릭
   if (e.target.classList.contains("delete-note-btn")) {
     const delete_btn = e.target;
     const note_item = delete_btn.parentElement;
-    
+
     // 이미 버튼을 누른 상태라면 모달창 닫기
     if (checkClicked(delete_btn)) {
-        deleteModal(delete_btn);
+      deleteModal(delete_btn);
     }
 
     // 버튼을 누르면 비밀번호 입력 모달창 생성
@@ -148,12 +148,12 @@ function clickBtn(e) {
       note_item.appendChild(div);
       delete_btn.classList.add("clicked");
       if (result == true) {
-          successDelete(e);
+        successDelete(e);
       }
     }
   }
 
-  elif (e.target.classList.contains("input-pw-btn")) {
+  else if (e.target.classList.contains("input-pw-btn")) {
     const pw_input = e.target.previousSibling("#corrpw");
     console.log(pw_input);
     const note_id = e.target.parentElement.id;
@@ -162,8 +162,8 @@ function clickBtn(e) {
 }
 
 function checkClicked(target) {
-    if (target.classList.contains("clicked")) return true;
-    else return false;
+  if (target.classList.contains("clicked")) return true;
+  else return false;
 }
 
 // delete를 두 번 누르거나 modal 창의 취소를 누르면 모달창 제거
@@ -179,13 +179,13 @@ function deleteModal(delete_btn) {
 }
 
 function successDelete(e) {
-    e.target.parentElement.remove();
-    let divID = e.target.parentElement.dataset.id;
-    let notes = getDataFromStorage();
-    let newNotesList = notes.filter(item => {
-      return item.id !== parseInt(divID);
-    });
-    localStorage.setItem("notes", JSON.stringify(newNotesList));
+  e.target.parentElement.remove();
+  let divID = e.target.parentElement.dataset.id;
+  let notes = getDataFromStorage();
+  let newNotesList = notes.filter(item => {
+    return item.id !== parseInt(divID);
+  });
+  localStorage.setItem("notes", JSON.stringify(newNotesList));
 }
 
 
