@@ -69,21 +69,24 @@ function validateInput(nickname, password, content) {
   } else {
     if (nickname.value === "") {
       nickname.classList.add("warning");
-      nickname.placeholder = "입력해 주세요.";
+      nickname.placeholder = "Please input a text.";
     }
     if (password.value === "") {
       password.classList.add("warning");
-      password.placeholder = "입력해 주세요.";
+      password.placeholder = "Please input a text.";
     }
     if (content.value === "") {
       content.classList.add("warning");
-      content.placeholder = "입력해 주세요.";
+      content.placeholder = "Please input a text.";
     }
   }
   setTimeout(() => {
     nickname.classList.remove("warning");
     password.classList.remove("warning");
     content.classList.remove("warning");
+    nickname.placeholder = "";
+    password.placeholder = "";
+    content.placeholder = "";
 
   }, 1600);
 }
@@ -132,7 +135,6 @@ function clickBtn(e) {
 
     // 버튼을 누르면 비밀번호 입력 모달창 생성
     else {
-      let result = false;
       const div = document.createElement("div");
       div.classList.add("modal");
       div.innerHTML = `
@@ -157,15 +159,19 @@ function clickBtn(e) {
       }
     }).then((res) => {
       // 200
-      console.log(res);
-      window.location.reload();
-      
-      // 401 
       // console.log(res);
-      // e.target.previousElementSibling.previousElementSibling.innerText = "비밀번호가 틀렸습니다.";
-
-      // 406
       // window.location.reload();
+    }).catch((err) => {
+      // 401 
+      console.log(err);
+      
+      console.log(err.response.status);
+      if (err.response.status == 401) {
+        e.target.previousElementSibling.previousElementSibling.innerText = "비밀번호가 틀렸습니다.";
+      } else if (err.response.status == 406) {
+       // 406
+        window.location.reload();
+      }
     })
   }
 }

@@ -15,18 +15,21 @@
         <h3>Add A New Note</h3>
 
         <form class="note-wrapper" method="post" action="">
+          <div class="err-msg" id="nick-err"></div>
           <input
             type="text"
             id="nickname"
             name="nickname"
             placeholder="Nickname"
           />
+          <div class="err-msg" id="pass-err"></div>
           <input
             type="text"
             id="password"
             name="password"
             placeholder="Password"
           />
+          <div class="err-msg" id="cont-err"></div>
           <textarea
             id="content"
             name="content"
