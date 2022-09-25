@@ -1,0 +1,20 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "serve": "nodemone app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ksee1230/react-board-new/issues"
+  },
+  "homepage": "https://github.com/ksee1230/react-board-new#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
