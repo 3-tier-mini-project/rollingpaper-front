@@ -23,6 +23,17 @@ function eventListeners() {
   noteListDiv.addEventListener("click", clickBtn);
 }
 
+eventListeners();
+
+
+// get item from storage 
+// 저장된 페이퍼들을 불러오는 함수
+function getDataFromStorage() {
+  return localStorage.getItem("notes") ? JSON.parse(localStorage.getItem("notes")) : [];
+}
+
+
+
 // add a new note in the list 
 
 function addNewNote() {
