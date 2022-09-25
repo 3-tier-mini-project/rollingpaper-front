@@ -3,7 +3,7 @@
 //}
 
 const noteListDiv = document.querySelector(".note-list");
-const dest = 'http://rolling-server.com';
+const dest = 'http://rolling-server:8000';
 
 // let noteID = 1;
 
