@@ -3,7 +3,7 @@
 //}
 
 const noteListDiv = document.querySelector(".note-list");
-const dest = 'http://rolling-server:8000';
+const dest = 'http://192.168.56.103:13001';
 
 // let noteID = 1;
 
@@ -44,7 +44,7 @@ function addNewNote() {
   if (validateInput(nickname, password, content)) {
     console.log(nickname.value, password.value, content.value);
     console.log(dest);
-    axios.post(dest, {
+    axios.post(`${dest}/allnotes`, {
       nickname: nickname.value,
       password: password.value,
       content: content.value
@@ -98,12 +98,12 @@ function createNote(noteItem) {
   div.classList.add("note-item");
   div.id = noteItem.id;
   div.innerHTML = `
-        <h3>${noteItem.nickname}</h3>
-        <p>${noteItem.content}</p>
-        <button type = "button" class = "btn delete-note-btn">
-        <span><i class = "fas fa-trash"></i></span>
-        Delete
-        </buttton>
+    <h3>${noteItem.nickname}</h3>
+    <p>${noteItem.content}</p>
+    <button type = "button" class = "btn delete-note-btn">
+    <span><i class = "fas fa-trash"></i></span>
+    Delete
+    </buttton>
   `;
   noteListDiv.appendChild(div);
 }
@@ -111,7 +111,7 @@ function createNote(noteItem) {
 // display all the notes from the local storage
 function displayNotes() {
   console.log(dest);
-  axios.get(dest).then((res) => {
+  axios.get(`${dest}/allnotes`).then((res) => {
     console.log(res);
     let notes = res.data;
     notes.forEach(item => {
