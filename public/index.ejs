@@ -14,7 +14,7 @@
       <div class="note-input">
         <h3>Add A New Note</h3>
 
-        <form class="note-wrapper" method="post" action="">
+        <form class="note-wrapper" method="post" action="/">
           <div class="err-msg" id="nick-err"></div>
           <input
             type="text"
@@ -36,7 +36,7 @@
             placeholder="Write a content 💕"
             rows="5"
           ></textarea>
-          <button id="add-note-btn" class="btn" type="button">
+          <button id="add-note-btn" class="btn" type="submit">
             <span><i class="fas fa-plus"></i></span>
             Add Note
           </button>
@@ -44,8 +44,7 @@
       </div>
       <div class="note-list">
         <% data.forEach(function(val) { %>
-          <div class="note-item">
-            <p>id=<%= val.id %></p>
+          <div class="note-item"  id="<%=val.id%>">
             <h3><%= val.nickname %></h3>
             <p><%= val.content %></p>
             <button type = "button" class = "btn delete-note-btn">
