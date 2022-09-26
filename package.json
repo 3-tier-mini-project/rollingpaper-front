@@ -15,6 +15,9 @@
   },
   "homepage": "https://github.com/ksee1230/react-board-new#readme",
   "dependencies": {
-    "express": "^4.18.1"
+    "axios": "^0.27.2",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "express-es6-template-engine": "^2.2.3"
   }
 }
