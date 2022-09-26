@@ -1,9 +1,8 @@
 //window.onLoad = function() {
 //  displayNotes();
 //}
-
 const noteListDiv = document.querySelector(".note-list");
-const dest = 'http://192.168.56.103:13001';
+const dest = 'http://192.168.56.103:13000';
 
 // let noteID = 1;
 
@@ -44,7 +43,7 @@ function addNewNote() {
   if (validateInput(nickname, password, content)) {
     console.log(nickname.value, password.value, content.value);
     console.log(dest);
-    axios.post(`${dest}/allnotes`, {
+    axios.post('/', {
       nickname: nickname.value,
       password: password.value,
       content: content.value
@@ -111,7 +110,7 @@ function createNote(noteItem) {
 // display all the notes from the local storage
 function displayNotes() {
   console.log(dest);
-  axios.get(`${dest}/allnotes`).then((res) => {
+  axios.get(`${dest}`).then((res) => {
     console.log(res);
     let notes = res.data;
     notes.forEach(item => {
