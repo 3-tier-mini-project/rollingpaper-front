@@ -1,8 +1,9 @@
 //window.onLoad = function() {
 //  displayNotes();
 //}
+
 const noteListDiv = document.querySelector(".note-list");
-const dest = 'http://192.168.56.103:13000';
+const dest = 'http://192.168.56.103:3000/';
 
 // let noteID = 1;
 
@@ -31,19 +32,19 @@ function getDataFromStorage() {
   return localStorage.getItem("notes") ? JSON.parse(localStorage.getItem("notes")) : [];
 }
 
-
-
 // add a new note in the list 
 
-function addNewNote() {
+function addNewNote(e) {
+  e.preventDefault();
   const nickname = document.getElementById("nickname");
   const password = document.getElementById("password");
   const content = document.getElementById("content");
-
+  console.log("this is addNewNote of index.js")
   if (validateInput(nickname, password, content)) {
     console.log(nickname.value, password.value, content.value);
     console.log(dest);
-    axios.post('/', {
+    
+    axios.post(`${dest}/post`, {
       nickname: nickname.value,
       password: password.value,
       content: content.value
@@ -51,12 +52,17 @@ function addNewNote() {
       console.log(res);
       window.location.reload();
     });
-
-
-    // saving in the local storage 
-    nickname.value = "";
-    password.value = "";
-    content.value = "";
+  }
+  else {
+    setTimeout(() => {
+      nickname.classList.remove("warning");
+      password.classList.remove("warning");
+      content.classList.remove("warning");
+      nickname.placeholder = "";
+      password.placeholder = "";
+      content.placeholder = "";
+  
+    }, 1600);
   }
 }
 
@@ -78,16 +84,8 @@ function validateInput(nickname, password, content) {
       content.classList.add("warning");
       content.placeholder = "Please input a text.";
     }
+    return false;
   }
-  setTimeout(() => {
-    nickname.classList.remove("warning");
-    password.classList.remove("warning");
-    content.classList.remove("warning");
-    nickname.placeholder = "";
-    password.placeholder = "";
-    content.placeholder = "";
-
-  }, 1600);
 }
 
 
@@ -97,6 +95,7 @@ function createNote(noteItem) {
   div.classList.add("note-item");
   div.id = noteItem.id;
   div.innerHTML = `
+    <h2>made by createNote of index.js</h2>
     <h3>${noteItem.nickname}</h3>
     <p>${noteItem.content}</p>
     <button type = "button" class = "btn delete-note-btn">
@@ -109,14 +108,8 @@ function createNote(noteItem) {
 
 // display all the notes from the local storage
 function displayNotes() {
-  console.log(dest);
-  axios.get(`${dest}`).then((res) => {
-    console.log(res);
-    let notes = res.data;
-    notes.forEach(item => {
-      createNote(item);
-    });
-  });
+  console.log('this is displayNotes of index.js');
+
 }
 
 // btn click functions
@@ -163,12 +156,12 @@ function clickBtn(e) {
     }).catch((err) => {
       // 401 
       console.log(err);
-      
+
       console.log(err.response.status);
       if (err.response.status == 401) {
         e.target.previousElementSibling.previousElementSibling.innerText = "비밀번호가 틀렸습니다.";
       } else if (err.response.status == 406) {
-       // 406
+        // 406
         window.location.reload();
       }
     })
@@ -205,7 +198,7 @@ function deleteModal(delete_btn) {
 // }
 
 
-// // delete a note 
+// // delete a note
 // function deleteNote(e) {
 //   if (e.target.classList.contains("delete-note-btn")) {
 
@@ -225,7 +218,7 @@ function deleteModal(delete_btn) {
 //         password: password.value
 //       }
 //     }).then((res) => {
-//       console.log(res); 
+//       console.log(res);
 //     })
 //     */
 //   }
