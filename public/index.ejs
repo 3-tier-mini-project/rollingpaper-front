@@ -4,15 +4,15 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Rolling-Rolling</title>
 
     <link rel="stylesheet" type="text/css" href="style.css" />
   </head>
   <body>
     <div class="note">
-      <h2>Note Taking App</h2>
+      <h2></h2>
       <div class="note-input">
-        <h3>Add A New Note</h3>
+        <h3>Add A New Paper</h3>
 
         <form class="note-wrapper" method="post">
           <div class="err-msg" id="nick-err"></div>
@@ -21,6 +21,7 @@
             id="nickname"
             name="nickname"
             placeholder="Nickname"
+            required="true"
           />
           <div class="err-msg" id="pass-err"></div>
           <input
@@ -28,6 +29,7 @@
             id="password"
             name="password"
             placeholder="Password"
+            required="true"
           />
           <div class="err-msg" id="cont-err"></div>
           <textarea
@@ -35,6 +37,7 @@
             name="content"
             placeholder="Write a content 💕"
             rows="5"
+            required="true"
           ></textarea>
           <button id="add-note-btn" class="btn" type="button">
             <span><i class="fas fa-plus"></i></span>
@@ -82,31 +85,17 @@ function eventListeners() {
 
 eventListeners();
 
-
-// // get item from storage 
-// // 저장된 페이퍼들을 불러오는 함수
-// function getDataFromStorage() {
-//   return localStorage.getItem("notes") ? JSON.parse(localStorage.getItem("notes")) : [];
-// }
-
-// add a new note in the list 
-
 function addNewNote(e) {
   e.preventDefault();
   const nickname = document.getElementById("nickname");
   const password = document.getElementById("password");
   const content = document.getElementById("content");
-  console.log("this is addNewNote of index.js")
   if (validateInput(nickname, password, content)) {
-    console.log(nickname.value, password.value, content.value);
-    console.log(dest);
-    
     axios.post('/', {
       nickname: nickname.value,
       password: password.value,
       content: content.value
     }).then((res) => {
-      console.log(res);
       window.location.reload();
     });
   }
@@ -163,17 +152,6 @@ function createNote(noteItem) {
   noteListDiv.appendChild(div);
 }
 
-// display all the notes from the local storage
-function displayNotes() {
-  console.log('this is displayNotes of index.js');
-  // axios.get(dest).then((res) => {
-  //   console.log(res);
-  //   let notes = res.data;
-  //   notes.forEach(item => {
-  //     createNote(item);
-  //   });
-  // });
-}
 
 // btn click functions
 function clickBtn(e) {
@@ -213,14 +191,8 @@ function clickBtn(e) {
         password: pw_input
       }
     }).then((res) => {
-      // 200
-      // console.log(res);
-      // window.location.reload();
     }).catch((err) => {
       // 401 
-      console.log(err);
-
-      console.log(err.response.status);
       if (err.response.status == 401) {
         e.target.previousElementSibling.previousElementSibling.innerText = "비밀번호가 틀렸습니다.";
       } else if (err.response.status == 406) {

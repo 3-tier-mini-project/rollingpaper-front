@@ -1,11 +1,4 @@
-//window.onLoad = function() {
-//  displayNotes();
-//}
-
 const noteListDiv = document.querySelector(".note-list");
-const dest = 'http://192.168.56.103:3000/';
-
-// let noteID = 1;
 
 function Note(nickname, password, content, id) {
   this.id = id;
@@ -17,9 +10,8 @@ function Note(nickname, password, content, id) {
 // Add eventListeners 
 // 저장된 페이퍼 로딩, 버튼 클릭에 대한 이벤트리스너 추가
 function eventListeners() {
-  document.addEventListener("DOMContentLoaded", displayNotes);
+  // document.addEventListener("DOMContentLoaded", displayNotes);
   document.getElementById("add-note-btn").addEventListener("click", addNewNote);
-
   noteListDiv.addEventListener("click", clickBtn);
 }
 
@@ -36,6 +28,10 @@ function getDataFromStorage() {
 
 function addNewNote(e) {
   e.preventDefault();
+}
+
+// add a new note in the list
+function addNewNote() {
   const nickname = document.getElementById("nickname");
   const password = document.getElementById("password");
   const content = document.getElementById("content");
@@ -106,11 +102,6 @@ function createNote(noteItem) {
   noteListDiv.appendChild(div);
 }
 
-// display all the notes from the local storage
-function displayNotes() {
-  console.log('this is displayNotes of index.js');
-
-}
 
 // btn click functions
 function clickBtn(e) {
@@ -132,9 +123,11 @@ function clickBtn(e) {
       div.innerHTML = `
         <div>비밀번호를 입력하세요.</div>
         <div class="err-msg">　</div>
+        <form method="post" action="/${note_item.id}">
         <input type="text" class="corrpw" name="corrpw" />
         <button type="submit" class="input-pw-btn">확인</button>
         <button type="button" class="delete-note-btn clicked">취소</button>
+        </form>
       `;
       note_item.appendChild(div);
       delete_btn.classList.add("clicked");
@@ -150,18 +143,10 @@ function clickBtn(e) {
         password: pw_input
       }
     }).then((res) => {
-      // 200
-      // console.log(res);
-      // window.location.reload();
     }).catch((err) => {
-      // 401 
-      console.log(err);
-
-      console.log(err.response.status);
       if (err.response.status == 401) {
         e.target.previousElementSibling.previousElementSibling.innerText = "비밀번호가 틀렸습니다.";
       } else if (err.response.status == 406) {
-        // 406
         window.location.reload();
       }
     })
@@ -184,42 +169,3 @@ function deleteModal(delete_btn) {
     delete_btn.classList.remove("clicked");
   }
 }
-
-// function successDelete(note_id, pw_input) {
-//   axios.delete(dest, {
-//     data: {
-//       id: note_id,
-//       password: pw_input
-//     }
-//   }).then((res) => {
-//     console.log(res);
-//     window.location.reload();
-//   })
-// }
-
-
-// // delete a note
-// function deleteNote(e) {
-//   if (e.target.classList.contains("delete-note-btn")) {
-
-//     e.target.parentElement.remove();
-//     let divID = e.target.parentElement.dataset.id;
-//     let notes = getDataFromStorage();
-//     let newNotesList = notes.filter(item => {
-//       return item.id !== parseInt(divID);
-//     });
-//     localStorage.setItem("notes", JSON.stringify(newNotesList));
-
-//     /*
-//     const dest = 'http://' + window.location.hostname + ':8080';
-//     axios.delete(dest, {
-//       data: {
-//         id: id.value,
-//         password: password.value
-//       }
-//     }).then((res) => {
-//       console.log(res);
-//     })
-//     */
-//   }
-// }

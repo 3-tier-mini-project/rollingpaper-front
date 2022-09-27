@@ -1,59 +1,34 @@
 const express = require('express');
-const es6Renderer = require('express-es6-template-engine');
 const app = express();
 const http = require('http');
 const path = require('path');
 const axios = require('axios');
 const ejs = require('ejs');
-const bodyParser = require('body-parser');
 const dest = 'http://rolling-server:8080';
+const router = express.Router();
+const bodyParser = require('body-parser');
+
+app.use(router);
+router.use(bodyParser.urlencoded({ extended: false }));
 
 app.set('view engine', 'ejs');
 app.set('views', 'public');
-const router = express.Router()
-app.use(router)
-
-const server = http.createServer((req, res) => {
-    res.statusCode = 200;
-    res.sendFile(__dirname + "/public/index.html");
-})
 
 app.use(express.static('public'));
-router.use(bodyParser.urlencoded({ extended: false }))
 
 
 router.get("/", (req, res) => {
     axios.get(dest)
         .then(response => {
-            console.log(response)
             res.render("index", { data: response.data })
         })
 });
 
-router.post("/", (req, res) => {
-    const nickname = req.body.nickname;
-    const password = req.body.password;
-    const content = req.body.content;
-    console.log("this is post of app.js")
-    console.log(nickname, password, content);
-    if (validateInput(nickname, password, content)) {
-        axios.post(dest, {
-            nickname: nickname,
-            password: password,
-            content: content
-        }).then((response) => {
-            console.log(response);
-            res.redirect('/');
-            // window.location.reload();
-        });
-    }
-})
-
 function validateInput(nickname, password, content) {
-    if (nickname.value !== "" && password.value !== "" && content.value !== "") {
+    if (nickname !== "" && password !== "" && content !== "") {
         return true;
     } else {
-        if (nickname.value === "") {
+        if (nickname === "") {
             nickname.classList.add("warning");
             nickname.placeholder = "Please input a text.";
         }
@@ -65,21 +40,57 @@ function validateInput(nickname, password, content) {
             content.classList.add("warning");
             content.placeholder = "Please input a text.";
         }
-    }
-    setTimeout(() => {
-        nickname.classList.remove("warning");
-        password.classList.remove("warning");
-        content.classList.remove("warning");
-        nickname.placeholder = "";
-        password.placeholder = "";
-        content.placeholder = "";
+        setTimeout(() => {
+            nickname.classList.remove("warning");
+            password.classList.remove("warning");
+            content.classList.remove("warning");
+            nickname.placeholder = "";
+            password.placeholder = "";
+            content.placeholder = "";
+        }, 1600);
 
-    }, 1600);
+        return false;
+    }
 }
 
-// server.listen(3000, () => {
-//     console.log("server running");
-// });
+router.post("/", (req, res) => {
+    const nickname = req.body.nickname;
+    const password = req.body.password;
+    const content = req.body.content;
+    axios.post(dest, {
+        nickname: nickname,
+        password: password,
+        content: content
+    }).then((response) => {
+        console.log(response);
+        res.redirect('/');
+        // window.location.reload();
+    }).catch((error) => {
+        res.redirect('/');
+    });
+})
+
+router.post("/:id", (req, res) => {
+    console.log("router.post active")
+    const id = req.params.id;
+    const password = req.body.corrpw;
+    axios.delete(dest, {
+        data: {
+            id: id,
+            password: password
+        }
+    }).then((response) => {
+        res.redirect('/');
+    }).catch((error) => {
+        stat = error.response.status;
+        console.log(stat);
+        if (stat == 401) {
+            res.write(`<script>alert('Password is wrong');location.href="/";</script>`);
+        } else {
+            res.redirect('/');
+        }
+    });
+})
 
 app.listen(3000, () => {
     console.log("running");
